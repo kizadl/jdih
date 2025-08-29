@@ -310,8 +310,8 @@ $this->params['breadcrumbs'][] = $this->title;
                                     <p><strong>File:</strong> <span id="izinFileName"></span></p>
                                     <div class="alert alert-info">
                                         <small>
-                                            Dengan mengajukan izin, Anda akan mendapatkan akses untuk mendownload dokumen asli.
-                                            Permintaan akan diproses dan Anda akan diberitahu melalui notifikasi.
+                                            Dengan mengajukan izin, Anda akan mendapatkan akses untuk mendownload dokumen asli setelah permintaan diproses. 
+                                            Silakan cek secara berkala.
                                         </small>
                                     </div>
                                 </div>
