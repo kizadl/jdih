@@ -39,6 +39,9 @@
 # Settings to hide index.php and ensure pretty urls
 RewriteEngine on
 
+# if a request is made to the dokumen directory, rewrite the URL
+RewriteRule ^storage/dokumen/(.*)$ index.php?r=storage/dokumen/$1 [L,QSA]
+
 # if a directory or a file exists, use it directly
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d

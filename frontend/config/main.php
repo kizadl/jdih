@@ -9,13 +9,13 @@ $params = array_merge(
 return [
     'id' => 'app-frontend',
     'basePath' => dirname(__DIR__),
-    'name' =>'Partisipasi Public',
+    'name' => 'Partisipasi Public',
     'bootstrap' => ['log'],
     'controllerNamespace' => 'frontend\controllers',
-    'modules'=>[
+    'modules' => [
         'gridview' =>  [
             'class' => '\kartik\grid\Module',
-        ], 
+        ],
     ],
     'components' => [
         'request' => [
@@ -46,7 +46,9 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
-                 '/' => 'site/index',
+                'storage/dokumen/preview/<dokumen_id:.+>' => 'storage/preview',
+                'storage/dokumen/download/<client_id:.+>/<dokumen_id:.+>' => 'storage/download',
+                '/' => 'site/index',
                 'kontak' => 'site/kontak',
                 '/rancangan' => 'rancangan/index',
             ],

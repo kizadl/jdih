@@ -26,6 +26,7 @@ use yii\data\ActiveDataProvider;
 use yii\helpers\Json;
 use backend\models\DataSubjekSearch;
 use backend\models\EksemplarSearch;
+use setasign\Fpdi\Fpdi;
 
 /**
  * PeraturanController implements the CRUD actions for Peraturan model.
@@ -678,76 +679,130 @@ class MonografiController extends Controller
             if (!empty($dokumen_lampiran)) {
                 $model->dokumen_lampiran =  strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/', '', $dokumen_lampiran->name));
                 $model->dokumen_lampiran = FileHelper::sanitizeFilename($dokumen_lampiran->name);
-                $path = Yii::getAlias('@common') . '/dokumen/' . $model->dokumen_lampiran;
-                $dokumen_lampiran->saveAs($path);
-            }
-            $model->url_lampiran = Yii::getAlias('@imageurl') . '/common/dokumen/' . $model->dokumen_lampiran;
+                $base = Yii::getAlias('@private') . '/dokumen';
+                $dirAsli = $base . '/asli';
+                $dirPreview = $base . '/preview';
 
-            if ($model->save()) {
 
-                $log = new LogPustakawan();
-                $log->dokumen_id = $model->id;
-                $log->controller = 'Peraturan';
-                $log->aksi = 'Tambah Lampiran';
-                $log->keterangan = 'User ' . \Yii::$app->user->identity->username . ' melakukan tambah data lampiran pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
-                $log->save();
-                Yii::$app->session->setFlash('success', 'Data Lampiran berhasil ditambah');
-                return $this->redirect(['view', 'id' => $id]);
+                $asliPath = $dirAsli . '/' . $model->dokumen_lampiran;
+                $dokumen_lampiran->saveAs($asliPath);
+
+                $ext = strtolower(pathinfo($asliPath, PATHINFO_EXTENSION));
+                if ($ext === 'pdf') {
+                    $previewPath = $dirPreview . '/' . $model->dokumen_lampiran;
+
+                    $pdf = new Fpdi();
+                    $pageCount = $pdf->setSourceFile($asliPath);
+                    $max = min(2, $pageCount);
+
+                    for ($i = 1; $i <= $max; $i++) {
+                        $tplId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($tplId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($tplId);
+                    }
+
+                    $pdf->Output($previewPath, 'F');
+                }
+
+                $model->url_lampiran = Yii::getAlias('@privateurl') . '/dokumen/' . $model->dokumen_lampiran;
+
+                if ($model->save()) {
+                    $log = new LogPustakawan();
+                    $log->dokumen_id = $model->id;
+                    $log->controller = 'Peraturan';
+                    $log->aksi = 'Tambah Lampiran';
+                    $log->keterangan = 'User ' . Yii::$app->user->identity->username .
+                        ' melakukan tambah data lampiran pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
+                    $log->save();
+
+                    Yii::$app->session->setFlash('success', 'Data Lampiran berhasil ditambah');
+                    return $this->redirect(['view', 'id' => $id]);
+                }
             }
-        } else {
-            return $this->render('lampiran/create-lampiran', [
-                'model' => $model,
-            ]);
         }
+        return $this->render('lampiran/create-lampiran', [
+            'model' => $model,
+        ]);
     }
 
     public function actionUbahLampiran($id)
     {
         $model = DataLampiran::findOne($id);
         $old = $model->dokumen_lampiran;
-        if ($model->load(Yii::$app->request->post())) {
 
+        if ($model->load(Yii::$app->request->post())) {
             $dokumen_lampiran = UploadedFile::getInstance($model, 'dokumen_lampiran');
 
             if (!empty($dokumen_lampiran)) {
-                $model->dokumen_lampiran =  strtolower(preg_replace('/[^a-zA-Z0-9-_\.]/', '', $dokumen_lampiran->name));
                 $model->dokumen_lampiran = FileHelper::sanitizeFilename($dokumen_lampiran->name);
-                $path = Yii::getAlias('@common') . '/dokumen/' . $model->dokumen_lampiran;
-                $dokumen_lampiran->saveAs($path);
-                $model->url_lampiran = Yii::getAlias('@imageurl') . '/common/dokumen/' . $model->dokumen_lampiran;
+
+                $base = Yii::getAlias('@private') . '/dokumen';
+                $dirAsli = $base . '/asli';
+                $dirPreview = $base . '/preview';
+
+
+                $asliPath = $dirAsli . '/' . $model->dokumen_lampiran;
+                $dokumen_lampiran->saveAs($asliPath);
+                $model->url_lampiran = Yii::getAlias('@privateurl') . '/dokumen/' . $model->dokumen_lampiran;
+
+                $ext = strtolower(pathinfo($asliPath, PATHINFO_EXTENSION));
+                if ($ext === 'pdf') {
+                    $previewPath = $dirPreview . '/' . $model->dokumen_lampiran;
+
+                    $pdf = new Fpdi();
+                    $pageCount = $pdf->setSourceFile($asliPath);
+                    $max = min(2, $pageCount);
+
+                    for ($i = 1; $i <= $max; $i++) {
+                        $tplId = $pdf->importPage($i);
+                        $size = $pdf->getTemplateSize($tplId);
+                        $pdf->AddPage($size['orientation'], [$size['width'], $size['height']]);
+                        $pdf->useTemplate($tplId);
+                    }
+
+                    $pdf->Output($previewPath, 'F');
+                }
             } else {
                 $model->dokumen_lampiran = $old;
             }
+
             if ($model->save()) {
                 $log = new LogPustakawan();
                 $log->dokumen_id = $model->id_dokumen;
                 $log->controller = 'Peraturan';
                 $log->aksi = 'Ubah Lampiran';
-                $log->keterangan = 'User ' . \Yii::$app->user->identity->username . ' melakukan ubah data lampiran pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
+                $log->keterangan = 'User ' . Yii::$app->user->identity->username .
+                    ' melakukan ubah data lampiran pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
                 $log->save();
+
                 Yii::$app->session->setFlash('warning', 'Data Lampiran berhasil diubah');
                 return $this->redirect(['view', 'id' => $model->id_dokumen]);
             }
-        } else {
-            return $this->render('lampiran/update-lampiran', [
-                'model' => $model,
-            ]);
         }
+
+        return $this->render('lampiran/update-lampiran', [
+            'model' => $model,
+        ]);
     }
 
     public function actionHapusLampiran($id)
     {
         $model = DataLampiran::findOne($id);
         $model->delete();
+
         $log = new LogPustakawan();
         $log->dokumen_id = $model->id_dokumen;
         $log->controller = 'Peraturan';
         $log->aksi = 'Hapus Lampiran';
-        $log->keterangan = 'User ' . \Yii::$app->user->identity->username . ' melakukan hapus data lampiran peraturan pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
+        $log->keterangan = 'User ' . Yii::$app->user->identity->username .
+            ' melakukan hapus data lampiran peraturan pada ' . $log->getTanggal2(date("Y-m-d H:i:s"));
         $log->save();
+
         Yii::$app->session->setFlash('danger', 'Data Lampiran berhasil dihapus');
         return $this->redirect(['view', 'id' => $model->id_dokumen]);
     }
+
     /*---------- END LAMPIRAN -----------------*/
 
     /*---------- BEGIN PERATURAN TERKAIT -----------------*/
