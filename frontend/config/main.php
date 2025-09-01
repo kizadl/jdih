@@ -46,6 +46,8 @@ return [
             'enablePrettyUrl' => true,
             'showScriptName' => false,
             'rules' => [
+                'api/dokumen/<key:[A-Fa-f0-9]{64}>' => 'api/dokumen',
+                'api/view/<key:[A-Fa-f0-9]{64}>/<dokumen_id:\d+>' => 'api/view',
                 'storage/dokumen/preview/<dokumen_id:.+>' => 'storage/preview',
                 'storage/dokumen/download/<client_id:.+>/<dokumen_id:.+>' => 'storage/download',
                 '/' => 'site/index',
