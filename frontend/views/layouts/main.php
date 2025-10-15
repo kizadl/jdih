@@ -17,19 +17,90 @@ AppAsset::register($this);
 <html lang="<?= Yii::$app->language ?>">
 
 <head>
-
     <meta charset="<?= Yii::$app->charset ?>">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <?= Html::csrfMetaTags() ?>
-    <title><?= Html::encode($this->title) ?></title>
-    <?php $this->head() ?>
+    <title>JDIH DPRD Kabupaten Jember - Jaringan Dokumentasi dan Informasi Hukum<?= Html::encode($this->title) ? ' - ' . Html::encode($this->title) : '' ?></title>
 
+    <meta name="description" content="Portal resmi JDIH DPRD Kabupaten Jember. Akses Peraturan Daerah, Keputusan DPRD, dan dokumentasi hukum secara cepat dan akurat." />
+    <link rel="canonical" href="https://jdih-dprd.jemberkab.go.id/" />
+    <meta name="robots" content="index,follow,max-snippet:-1,max-image-preview:large,max-video-preview:-1" />
+
+    <!-- Open Graph -->
+    <meta property="og:title" content="JDIH DPRD Kabupaten Jember - Jaringan Dokumentasi dan Informasi Hukum" />
+    <meta property="og:description" content="Portal resmi JDIH DPRD Kabupaten Jember. Telusuri Peraturan Daerah, Keputusan DPRD, dan produk hukum terbaru." />
+    <meta property="og:url" content="https://jdih-dprd.jemberkab.go.id/" />
+    <meta property="og:site_name" content="JDIH DPRD Kabupaten Jember" />
+    <meta property="og:type" content="website" />
+    <meta property="og:locale" content="id_ID" />
+    <meta property="og:image" content="https://jdih-dprd.jemberkab.go.id/frontend/assets/img/logos/jdihn.png" />
+    <meta property="og:image:alt" content="Logo JDIH DPRD Kabupaten Jember" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="JDIH DPRD Kabupaten Jember - Jaringan Dokumentasi dan Informasi Hukum" />
+    <meta name="twitter:description" content="Dokumentasi hukum DPRD Kabupaten Jember. Akses cepat ke Perda, Keputusan, dan informasi hukum terbaru." />
+    <meta name="twitter:image" content="https://jdih-dprd.jemberkab.go.id/frontend/assets/img/logos/jdihn.png" />
+
+    <!-- Icons -->
+    <link rel="icon" href="https://jdih-dprd.jemberkab.go.id/favicon.ico" />
+    <link rel="apple-touch-icon" href="https://jdih-dprd.jemberkab.go.id/frontend/assets/img/logos/jdihn.png" />
+    <meta name="theme-color" content="#0f766e" />
+
+    <!-- Schema.org JSON-LD -->
+    <script type="application/ld+json">
+        {
+            "@context": "https://schema.org",
+            "@graph": [{
+                    "@type": "GovernmentOrganization",
+                    "name": "JDIH DPRD Kabupaten Jember",
+                    "url": "https://jdih-dprd.jemberkab.go.id/",
+                    "logo": "https://jdih-dprd.jemberkab.go.id/frontend/assets/img/logos/jdihn.png",
+                    "address": {
+                        "@type": "PostalAddress",
+                        "streetAddress": "Jl. Kalimantan No.86, Tegal Boto Lor, Sumbersari",
+                        "addressLocality": "Kabupaten Jember",
+                        "addressRegion": "Jawa Timur",
+                        "postalCode": "68121",
+                        "addressCountry": "ID"
+                    },
+                    "contactPoint": [{
+                            "@type": "ContactPoint",
+                            "contactType": "Informasi dan Layanan Publik",
+                            "telephone": "+62 821-3777-9668",
+                            "email": "setwan@jemberkab.go.id",
+                            "areaServed": "ID",
+                            "availableLanguage": ["id"]
+                        },
+                        {
+                            "@type": "ContactPoint",
+                            "contactType": "Alternatif",
+                            "email": "dprdkabjember@gmail.com",
+                            "areaServed": "ID",
+                            "availableLanguage": ["id"]
+                        }
+                    ]
+                },
+                {
+                    "@type": "WebSite",
+                    "name": "JDIH DPRD Kabupaten Jember",
+                    "url": "https://jdih-dprd.jemberkab.go.id/",
+                    "inLanguage": "id-ID",
+                    "potentialAction": {
+                        "@type": "SearchAction",
+                        "target": "https://jdih-dprd.jemberkab.go.id/dokumen/index?DokumenSearch%5Bjudul%5D={search_term_string}",
+                        "query-input": "required name=search_term_string"
+                    }
+                }
+            ]
+        }
+    </script>
+
+    <?php $this->head() ?>
 </head>
 
-
 <body>
-
     <?php $this->beginBody() ?>
 
 
@@ -69,7 +140,7 @@ AppAsset::register($this);
                                         <!-- end logo -->
                                     </div>
 
-                                    <div class="navbar-toggler" ></div>
+                                    <div class="navbar-toggler"></div>
 
                                     <!-- start menu area -->
                                     <?= $this->render('menu.php') ?>
@@ -89,7 +160,7 @@ AppAsset::register($this);
 
 
 
-    </div>
+    </div> -->
     <!-- end main-wrapper section -->
 
     <!-- start scroll to top -->
@@ -106,9 +177,9 @@ AppAsset::register($this);
     <?php $this->endBody() ?>
 
     <!-- Google Analytics Start -->
-		
-		
-		
+
+
+
     <!-- Google Analytics End -->
 
 </body>
