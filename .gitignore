@@ -23,6 +23,11 @@ Thumbs.db
 !/vendor/bower
 !/vendor/mdmsoft
 
+/ildis/vendor/*
+!/ildis/vendor/adminlte
+!/ildis/vendor/bower
+!/ildis/vendor/mdmsoft
+
 # composer itself is not needed
 composer.phar
 
